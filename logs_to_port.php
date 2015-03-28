@@ -1,7 +1,12 @@
 <?php
-
-$handle = fopen("split_all_log.log", "r");
-//$handle = fopen("mac64d7d7e9b42cbdeaf38433dde82ad18d_1426179194.txt", "r");
+/**
+ * This file takes only relevant information from the logs and outputs it in a 
+ * structured way. This helps in making the other scripts read the logs easier
+ * and faster
+ * 
+ * @todo either read from STDIN or make file name come in from argv
+ */
+$handle = fopen("logs/split_logs.txt", "r");
 
 if ($handle) {
     while (($line = fgets($handle)) !== false) {

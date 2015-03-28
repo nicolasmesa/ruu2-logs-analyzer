@@ -1,7 +1,17 @@
 <?php
+/**
+ * This script counting analysis on the log files including:
+ *  - src_port,dst_port pairing count ($port_analysis)
+ *  - dst_port count ($dst_port_analysis)
+ *  - src_port count ($src_port_analysis)
+ *  - src_ip,dst_ip pairing count ($ip_analysis)
+ *  - src_ip count ($src_ip_analysis)
+ *  - dst_ip count ($dst_ip_analysis)
+ *  - ports per ip ($ip_ports_analysis)
+ *  - count number of ports per ip ($src_ip_diff_analysis)
+ */
 
-$handle = fopen("port_logs_all.log", "r");
-//$handle = fopen("mac64d7d7e9b42cbdeaf38433dde82ad18d_1426179194.txt", "r");
+$handle = fopen("logs/port_logs.txt", "r");
 
 if ($handle) {
     $port_analysis = array();
@@ -11,7 +21,6 @@ if ($handle) {
     $src_ip_analysis = array();
     $dst_ip_analysis = array();
     $ip_proto_analysis = array();
-    $connection_analysis = array();
     $ip_ports_analysis = array();
     $src_ip_diff_ports_analysis = array();
 
@@ -20,11 +29,9 @@ if ($handle) {
         $line = str_replace("\n", "", $line);
         list($date, $time, $ip_proto, $src_ip, $dst_ip, $src_port, $dst_port, $action, $flag) = explode("\t", $line);
 
+       
 
-        $port_arr = array($src_port, $dst_port);
-        asort($port_arr);
-
-        $port_key = implode(',', $port_arr);
+        $port_key = "$src_port,$dst_port";
         if (!isset($port_analysis[$port_key])) {
             $port_analysis[$port_key] = 0;
         }
@@ -86,12 +93,15 @@ if ($handle) {
         $ip_ports_analysis[$dst_ip][$src_port] ++;
     }
 
-
-    $analysis = $src_ip_diff_ports_analysis;
+    /*
+     * Change this variable for the analysis that you want to output
+     * e.g. $analysis = $ip_analysis
+     */
+    $analysis = $dst_ip_analysis;
 
     arsort($analysis);
 
-    $max_output = 1000000;
+    $max_output = 25;
     $index = 0;
 
     foreach ($analysis as $key => $value) {
@@ -103,7 +113,7 @@ if ($handle) {
         }
     }
 
-    echo "count: " . count($analysis);
+    //echo "count: " . count($analysis);
 
     fclose($handle);
 }

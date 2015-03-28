@@ -1,5 +1,9 @@
 <?php
-$handle = fopen("all_logs.log", "r");
+/**
+ * Some lines in the log files are merged together (maybe some bug). This process
+ * will get the raw log and split the marged lines to try and fix the log file
+ */
+$handle = fopen("logs/merged_logs.txt", "r");
 
 if ($handle) {
     while (($line = fgets($handle)) !== false) {
